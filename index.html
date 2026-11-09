@@ -116,6 +116,31 @@ img.av{object-fit:cover;object-position:center top;display:block;background:#d9d
 .pill{display:inline-block;margin-left:.4rem;padding:.05rem .45rem;border-radius:999px;font-size:.65rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;vertical-align:middle;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
 .fine{margin:1.25rem 0 0;color:var(--muted);font-size:.85rem}
 @media (max-width:560px){.race{grid-template-columns:2.2rem 1fr}.race .when{grid-column:2;text-align:left}}
+html{-webkit-text-size-adjust:100%}
+@media (hover:none){.team:hover{transform:none;border-color:var(--line)}.team:hover::after{opacity:.1;transform:none}.visit:hover,.updates-btn:hover{transform:none;filter:none}}
+@media (max-width:560px){
+  .wrap{width:calc(100% - 1.5rem)}
+  nav{gap:.9rem;height:54px}
+  .logo{flex:none;font-size:1.15rem}
+  nav ul{flex:1;min-width:0;justify-content:flex-start;gap:1.1rem;overflow-x:auto;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:.5rem .25rem}
+  nav ul::-webkit-scrollbar{display:none}
+  nav a{font-size:.88rem;display:block;padding:.2rem 0}
+  .hero{padding-top:2.25rem}
+  h1{font-size:clamp(2.3rem,12vw,3rem);max-width:none}
+  .stats{grid-template-columns:repeat(2,1fr);gap:.6rem}
+  .stat{padding:.8rem .9rem}
+  .stat b{font-size:1.5rem}
+  .filters{gap:.4rem;margin:1rem 0 1.25rem}
+  .chip{padding:.55rem 1rem}
+  .team{padding:1.1rem;gap:.8rem}
+  .tag{position:static;align-self:flex-start}
+  .drivers{grid-template-columns:1fr}
+  .driver{padding:.7rem .8rem}
+  .updates-btn{padding:.85rem 1rem}
+  .toggle{width:100%;justify-content:center}
+  .now{padding:1.1rem 1rem 1.1rem 1.4rem}
+  .race{padding:.8rem .85rem}
+}
 footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.85rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
