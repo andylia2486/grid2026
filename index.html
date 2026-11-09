@@ -37,7 +37,7 @@ nav a{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;t
 nav a:hover{color:var(--text)}
 @media (max-width:560px){nav ul{gap:1rem}.hide-sm{display:none}}
 
-.hero{position:relative;overflow:hidden;padding:clamp(4rem,12vw,9rem) 0 clamp(3rem,8vw,6rem)}
+.hero{position:relative;overflow:hidden;padding:clamp(3rem,9vw,6rem) 0 clamp(1.5rem,4vw,3rem)}
 .hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:60vw;height:60vw;max-width:700px;max-height:700px;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 28%,transparent),transparent 65%);filter:blur(10px);pointer-events:none}
 .eyebrow{display:inline-flex;gap:.6rem;align-items:center;font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 .eyebrow::before{content:"";width:2rem;height:3px;background:currentColor;border-radius:2px}
@@ -48,7 +48,7 @@ h1{font-size:clamp(2.8rem,9vw,6.5rem);line-height:.98;letter-spacing:-.045em;mar
 .stat b{display:block;font-size:1.9rem;letter-spacing:-.03em;line-height:1.1}
 .stat small{color:var(--muted)}
 
-section{padding:clamp(3rem,7vw,5.5rem) 0}
+section{padding:clamp(1.5rem,3.5vw,2.5rem) 0}
 h2{font-size:clamp(1.9rem,4.5vw,3rem);letter-spacing:-.03em;line-height:1.1;margin:.6rem 0 1rem}
 .about{display:grid;gap:2rem;grid-template-columns:1fr}
 @media (min-width:860px){.about{grid-template-columns:1fr 1.2fr;align-items:start}}
@@ -125,6 +125,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
         <li><a href="#about">About</a></li>
         <li><a href="#teams">Teams</a></li>
         <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#podiums">Podiums</a></li>
         <li><a href="#standings">Standings</a></li>
       </ul>
     </nav>
@@ -135,7 +136,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
   <div class="hero">
     <div class="wrap">
       <span class="eyebrow">Formula 1 · 2026 Season</span>
-      <h1>The new grid. A new era.</h1>
+      <h1>The New Grid. A New Era.</h1>
       <p class="lead">Eleven teams, twenty-two drivers and a ground-up rewrite of the rulebook. Meet everyone on the 2026 Formula 1 grid.</p>
       <div class="stats">
         <div class="stat"><b>11</b><small>Teams</small></div>
@@ -149,15 +150,15 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
     <div class="wrap about">
       <div>
         <span class="eyebrow">About</span>
-        <h2>Why 2026 changes everything</h2>
+        <h2>Why 2026 Changes Everything</h2>
         <p>Formula 1 enters one of its biggest resets. New chassis and power unit regulations bring smaller, lighter cars, active aerodynamics and a far greater reliance on electrical power.</p>
         <p>The grid also grows to eleven teams, with Cadillac joining as a new constructor and Audi taking over the former Sauber entry.</p>
       </div>
       <div class="cards" id="regs">
-        <div class="note"><h3>⚡ Electric power</h3><p>Roughly half of the power now comes from the electric side, with 100% sustainable fuels.</p></div>
-        <div class="note"><h3>🌀 Active aero</h3><p>Movable front and rear wings replace DRS to cut drag on straights.</p></div>
-        <div class="note"><h3>🏁 Lighter cars</h3><p>Shorter wheelbase, narrower floor and reduced weight for nimbler racing.</p></div>
-        <div class="note"><h3>🆕 New names</h3><p>Audi and Cadillac arrive, while Ford partners with Red Bull and Honda joins Aston Martin.</p></div>
+        <div class="note"><h3>⚡ Electric Power</h3><p>Roughly half of the power now comes from the electric side, with 100% sustainable fuels.</p></div>
+        <div class="note"><h3>🌀 Active Aero</h3><p>Movable front and rear wings replace DRS to cut drag on straights.</p></div>
+        <div class="note"><h3>🏁 Lighter Cars</h3><p>Shorter wheelbase, narrower floor and reduced weight for nimbler racing.</p></div>
+        <div class="note"><h3>🆕 New Names</h3><p>Audi and Cadillac arrive, while Ford partners with Red Bull and Honda joins Aston Martin.</p></div>
       </div>
     </div>
   </section>
@@ -165,7 +166,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
   <section id="teams">
     <div class="wrap">
       <span class="eyebrow">The Teams</span>
-      <h2>2026 constructors &amp; drivers</h2>
+      <h2>2026 Constructors &amp; Drivers</h2>
       <div class="filters" id="filters" role="group" aria-label="Filter by power unit"></div>
       <div class="grid" id="grid"></div>
     </div>
@@ -173,7 +174,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
   <section id="schedule">
     <div class="wrap">
       <div class="sched-head">
-        <div><span class="eyebrow">Schedule</span><h2>2026 race calendar</h2></div>
+        <div><span class="eyebrow">Schedule</span><h2>2026 Race Calendar</h2></div>
         <button class="toggle" id="schedToggle" type="button" aria-expanded="false" aria-controls="schedList"><span id="schedLabel">Show full schedule</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       </div>
       <div class="cal" id="cal" aria-label="Race calendar"></div>
@@ -282,6 +283,87 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
       <p class="fine">23 rounds. The April Bahrain and Saudi Arabian races were cancelled, and Bahrain’s race was moved to Sepang, Malaysia. Dates are subject to change.</p>
     </div>
   </section>
+  <section id="podiums">
+    <style>
+      .pd-sub{color:var(--muted);margin:0 0 1.25rem;max-width:62ch}
+      .pd-tally{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.5rem;padding:0;list-style:none}
+      .pd-tally li{display:inline-flex;align-items:center;gap:.5rem;padding:.3rem .75rem .3rem .4rem;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:.82rem;font-weight:600}
+      .pd-tally i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+      .pd-tally small{color:var(--muted);font-weight:500}
+      .pd-list{list-style:none;margin:0;padding:0;display:grid;gap:.7rem}
+      .pd-list[data-open="false"] .pd-row:nth-child(n+2){display:none}
+      .pd-row{display:grid;grid-template-columns:minmax(0,15rem) 1fr;gap:.8rem 1.2rem;align-items:center;padding:.9rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+      .pd-race{display:flex;gap:.8rem;align-items:center}
+      .pd-rd{font-weight:800;color:var(--muted);font-size:.85rem;min-width:2.2rem}
+      .pd-race b{display:block;line-height:1.25}
+      .pd-race small{color:var(--muted)}
+      .pd-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}
+      .pd-slot{--c:#888;display:flex;align-items:center;gap:.55rem;padding:.5rem .6rem;border-radius:12px;background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--c);min-width:0}
+      .pd-slot>div{min-width:0;line-height:1.2}
+      .pd-slot b{display:block;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .pd-slot small{color:var(--muted);font-size:.72rem}
+      .pd-pos{font-size:.7rem;font-weight:800;color:var(--muted);min-width:1.6rem}
+      .pd-slot.p1 .pd-pos{color:#d99a00}
+      @media (max-width:760px){.pd-row{grid-template-columns:1fr}.pd-slots{grid-template-columns:1fr}}
+    </style>
+    <div class="wrap">
+      <span class="eyebrow">Podiums</span>
+      <h2>2026 Race Podiums</h2>
+      <p class="pd-sub">The latest Grand Prix podium is shown below, with every earlier race one tap away. The tally shows wins (W) and total podiums (P).</p>
+      <ul class="pd-tally" id="pdTally"></ul>
+      <ol class="pd-list" id="pdList" data-open="false"></ol>
+      <div class="st-actions">
+        <button class="toggle" id="pdToggle" type="button" aria-expanded="false" aria-controls="pdList"><span id="pdLabel">Show all races</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      </div>
+      <p class="fine">Results after any post-race penalties. The Bahrain Grand Prix was held in Sepang, Malaysia.</p>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      const pod = {
+        1:["George Russell","Kimi Antonelli","Charles Leclerc"], 2:["Kimi Antonelli","George Russell","Lewis Hamilton"],
+        3:["Kimi Antonelli","Oscar Piastri","Charles Leclerc"], 4:["Kimi Antonelli","Lando Norris","Oscar Piastri"],
+        5:["Kimi Antonelli","Lewis Hamilton","Max Verstappen"], 6:["Kimi Antonelli","Lewis Hamilton","Isack Hadjar"],
+        7:["Lewis Hamilton","George Russell","Lando Norris"], 8:["George Russell","Max Verstappen","Kimi Antonelli"],
+        9:["Charles Leclerc","George Russell","Lewis Hamilton"], 10:["Kimi Antonelli","Charles Leclerc","Max Verstappen"],
+        11:["Lando Norris","Max Verstappen","Kimi Antonelli"], 12:["Lando Norris","Kimi Antonelli","George Russell"],
+        13:["Kimi Antonelli","George Russell","Max Verstappen"], 14:["Kimi Antonelli","Max Verstappen","Lando Norris"],
+        15:["George Russell","Max Verstappen","Isack Hadjar"], 16:["Max Verstappen","Kimi Antonelli","Lewis Hamilton"],
+        17:["Max Verstappen","Charles Leclerc","Kimi Antonelli"], 18:["Kimi Antonelli","Charles Leclerc","Max Verstappen"],
+        19:["Max Verstappen","Lewis Hamilton","Kimi Antonelli"], 20:["Lando Norris","Max Verstappen","Isack Hadjar"]
+      };
+      window.PODS = pod;
+      const col = {}, tm = {};
+      teams.forEach(t => t.dr.forEach(d => { col[d[0]] = t.c; tm[d[0]] = t.n; }));
+      const ini = n => n.split(" ")[0][0] + n.split(" ").pop()[0];
+      const last = n => n.split(" ").slice(1).join(" ");
+      const av = n => photos[n]
+        ? `<img class="st-av sm" src="${photos[n]}" alt="${n}" width="32" height="32">`
+        : `<span class="st-av sm" aria-hidden="true">${ini(n)}</span>`;
+      const done = races.filter(rc => pod[rc.r]).reverse();
+      const stat = {};
+      done.forEach(rc => pod[rc.r].forEach((n, i) => { const s = stat[n] || (stat[n] = {w:0, p:0}); s.p++; if (i === 0) s.w++; }));
+      document.getElementById("pdTally").innerHTML = Object.entries(stat)
+        .sort((a, b) => b[1].w - a[1].w || b[1].p - a[1].p)
+        .map(([n, s]) => `<li style="--c:${col[n] || "#888"}"><i></i>${n} <small>${s.w} W · ${s.p} P</small></li>`).join("");
+      const ord = ["1st", "2nd", "3rd"];
+      const list = document.getElementById("pdList");
+      list.innerHTML = done.map(rc => `
+        <li class="pd-row">
+          <div class="pd-race"><span class="pd-rd">R${rc.r}</span><div><b>${rc.n}${tags(rc)}</b><small>${range(rc)}</small></div></div>
+          <div class="pd-slots">${pod[rc.r].map((n, i) => `
+            <div class="pd-slot p${i + 1}" style="--c:${col[n] || "#888"}"><span class="pd-pos">${ord[i]}</span>${av(n)}<div><b>${last(n)}</b><small>${tm[n] || ""}</small></div></div>`).join("")}
+          </div>
+        </li>`).join("");
+      const btn = document.getElementById("pdToggle"), lab = document.getElementById("pdLabel");
+      btn.addEventListener("click", () => {
+        const open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", String(!open));
+        list.dataset.open = String(!open);
+        lab.textContent = open ? "Show all races" : "Show latest race only";
+      });
+    });
+    </script>
+  </section>
   <section id="standings">
     <style>
       #standings .st-sub{color:var(--muted);margin:0 0 1.5rem;max-width:62ch}
@@ -312,7 +394,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
     </style>
     <div class="wrap">
       <span class="eyebrow">Standings</span>
-      <h2>2026 drivers’ championship</h2>
+      <h2>2026 Drivers’ Championship</h2>
       <p class="st-sub">Standings after Round 20, the São Paulo Grand Prix (8 Nov 2026). Kimi Antonelli clinched the title one round earlier in Mexico City at 20 years and 68 days old, the youngest world champion in Formula 1 history.</p>
       <div class="st-podium" id="stPodium"></div>
       <ol class="st-table" id="stTable"></ol>
@@ -366,6 +448,149 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
     });
     </script>
   </section>
+  <section id="headtohead">
+    <style>
+      .cmp-sub{color:var(--muted);margin:0 0 1.25rem;max-width:62ch}
+      .cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-items:start}
+      .cmp-pick{min-width:0}
+      .cmp-btn{width:100%;display:flex;align-items:center;gap:.6rem;font:inherit;text-align:left;padding:.6rem .8rem;min-height:58px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;box-shadow:var(--shadow)}
+      .cmp-btn>div{min-width:0;flex:1;line-height:1.2}
+      .cmp-btn small{display:block;color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+      .cmp-btn b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .cmp-btn>svg{flex:none;width:1em;height:1em;transition:transform .25s}
+      .cmp-btn[aria-expanded="true"]>svg{transform:rotate(180deg)}
+      .cmp-btn:focus-visible,.cmp-opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+      .cmp-list{list-style:none;margin:.4rem 0 0;padding:.35rem;max-height:19rem;overflow:auto;display:grid;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+      .cmp-list[hidden]{display:none}
+      .cmp-opt{width:100%;display:flex;align-items:center;gap:.55rem;font:inherit;font-size:.86rem;font-weight:600;text-align:left;padding:.4rem .5rem;border-radius:10px;border:0;background:transparent;color:var(--text);cursor:pointer;line-height:1.2}
+      .cmp-opt:hover:not(:disabled){background:var(--bg)}
+      .cmp-opt[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+      .cmp-opt:disabled{opacity:.4;cursor:default}
+      .cmp-opt .t{display:block;color:var(--muted);font-size:.7rem;font-weight:500}
+      .cmp-actions{margin-top:.9rem}
+      .cmp-actions[hidden]{display:none}
+      .vs-panel{margin-top:1.25rem;padding:1.25rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+      .vs-panel[hidden]{display:none}
+      .vs-head{display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:center;margin-bottom:.9rem}
+      .vs-side{display:flex;align-items:center;gap:.7rem;min-width:0}
+      .vs-side.r{flex-direction:row-reverse;text-align:right}
+      .vs-side div{min-width:0;line-height:1.2}
+      .vs-side b{display:block;font-size:1.05rem}
+      .vs-side small{color:var(--muted)}
+      .vs-x{font-weight:900;color:var(--muted);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+      .vs-row{display:grid;grid-template-columns:3rem 1fr 3rem;gap:.8rem;align-items:center;padding:.6rem 0;border-top:1px solid var(--line)}
+      .vs-val{font-size:1.2rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted)}
+      .vs-val.win{color:var(--text)}
+      .vs-val.rt{text-align:right}
+      .vs-lab{text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.35rem}
+      .vs-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--bg)}
+      .vs-bar i{display:block;background:var(--l)}
+      .vs-bar i+i{background:var(--r)}
+      @media (max-width:560px){.vs-side b{font-size:.92rem}.vs-side .st-av{width:36px;height:36px;font-size:.7rem}.vs-x{display:none}.vs-head{grid-template-columns:1fr 1fr}.cmp-opt{font-size:.8rem}}
+    </style>
+    <div class="wrap">
+      <span class="eyebrow">Head-to-Head</span>
+      <h2>Driver Comparison</h2>
+      <p class="cmp-sub">Open each list and choose a driver. The comparison appears once both sides are picked.</p>
+      <div class="cmp-cols" id="cmpCols"></div>
+      <div class="cmp-actions" id="cmpActions" hidden>
+        <button class="toggle" id="cmpClear" type="button"><span>Clear Selection</span></button>
+      </div>
+      <div class="vs-panel" id="vsPanel" aria-live="polite" hidden></div>
+      <p class="fine">Points, wins and podiums are after Round 20. Points finishes and retirements are after Round 19, the Mexico City Grand Prix. Qualifying and race head-to-heads, scored by Formula1.com after Round 19, appear for teammates only, and races where both drivers retired are not counted. Part-time drivers Yuki Tsunoda and Ryo Hirakawa are not listed, and neither is Rafael Câmara, who has no 2026 starts.</p>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      const P = window.PODS || {}, stat = {};
+      Object.values(P).forEach(t => t.forEach((n, i) => { const s = stat[n] || (stat[n] = {w:0, p:0}); s.p++; if (i === 0) s.w++; }));
+      const col = {"McLaren":"#ff8000","Mercedes":"#00d2be","Red Bull Racing":"#3671c6","Ferrari":"#e8002d","Williams":"#005aff","Racing Bulls":"#6692ff","Aston Martin":"#229971","Haas":"#b6babd","Audi":"#f50537","Alpine":"#ff87bc","Cadillac":"#9a9aa8"};
+      // name, number, team, points (R20), points finishes (R19), retirements (R19)
+      const drivers = [
+        ["Kimi Antonelli",12,"Mercedes",390,17,1],["Max Verstappen",3,"Red Bull Racing",279,15,4],["George Russell",63,"Mercedes",262,15,3],
+        ["Lewis Hamilton",44,"Ferrari",261,18,1],["Charles Leclerc",16,"Ferrari",249,16,3],["Lando Norris",1,"McLaren",246,15,4],
+        ["Oscar Piastri",81,"McLaren",152,12,3],["Isack Hadjar",6,"Red Bull Racing",122,13,2],["Liam Lawson",30,"Racing Bulls",89,14,1],
+        ["Pierre Gasly",10,"Alpine",42,10,2],["Arvid Lindblad",41,"Racing Bulls",38,11,2],["Franco Colapinto",43,"Alpine",27,8,3],
+        ["Oliver Bearman",87,"Haas",23,4,6],["Gabriel Bortoleto",5,"Audi",14,4,2],["Nico Hülkenberg",27,"Audi",14,4,4],
+        ["Esteban Ocon",31,"Haas",7,3,1],["Fernando Alonso",14,"Aston Martin",7,3,7],["Carlos Sainz",55,"Williams",7,4,3],
+        ["Alex Albon",23,"Williams",5,2,8],["Lance Stroll",18,"Aston Martin",0,0,13],["Valtteri Bottas",77,"Cadillac",0,0,10],["Sergio Pérez",11,"Cadillac",0,0,5]
+      ].map(([n,num,t,pt,pf,dnf]) => ({n, num, t, c:col[t], pt, pf, dnf, w:(stat[n]||{w:0}).w, p:(stat[n]||{p:0}).p}));
+      const byName = Object.fromEntries(drivers.map(d => [d.n, d]));
+      // teammate head-to-heads after Round 19: [driver A, driver B, qualifying A-B, race A-B]
+      const h2h = [
+        ["Kimi Antonelli","George Russell",[11,8],[14,5]], ["Lewis Hamilton","Charles Leclerc",[9,10],[10,9]],
+        ["Max Verstappen","Isack Hadjar",[12,4],[13,3]], ["Lando Norris","Oscar Piastri",[12,7],[11,7]],
+        ["Liam Lawson","Arvid Lindblad",[9,7],[12,4]], ["Pierre Gasly","Franco Colapinto",[16,3],[11,7]],
+        ["Oliver Bearman","Esteban Ocon",[13,5],[10,7]], ["Nico Hülkenberg","Gabriel Bortoleto",[10,9],[10,9]],
+        ["Carlos Sainz","Alex Albon",[14,5],[11,8]], ["Fernando Alonso","Lance Stroll",[17,2],[10,3]],
+        ["Sergio Pérez","Valtteri Bottas",[11,8],[13,4]]
+      ];
+      const mates = (x, y) => { for (const [a,b,q,r] of h2h) { if (a===x && b===y) return {q, r}; if (a===y && b===x) return {q:[q[1],q[0]], r:[r[1],r[0]]}; } return null; };
+      const pics = (typeof photos !== "undefined") ? photos : {};
+      const ini = n => n.split(" ")[0][0] + n.split(" ").pop()[0];
+      const av = (d, cls) => d && pics[d.n]
+        ? `<img class="st-av ${cls}" src="${pics[d.n]}" alt="${d.n}" width="${cls ? 32 : 44}" height="${cls ? 32 : 44}">`
+        : `<span class="st-av ${cls}" style="--c:${d ? d.c : "#888"}" aria-hidden="true">${d ? ini(d.n) : "?"}</span>`;
+      const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+      const wrap = document.getElementById("cmpCols"), panel = document.getElementById("vsPanel");
+      const acts = document.getElementById("cmpActions");
+      const sides = [["L","Driver One"],["R","Driver Two"]];
+      const state = {L:null, R:null};
+      wrap.innerHTML = sides.map(([k, lab]) => `
+        <div class="cmp-pick" data-side="${k}">
+          <button type="button" class="cmp-btn" aria-expanded="false" aria-controls="cmpList${k}"></button>
+          <ul class="cmp-list" id="cmpList${k}" hidden>${drivers.map(d => `
+            <li><button type="button" class="cmp-opt" data-n="${d.n}" aria-pressed="false">${av(d,"sm")}<div>${d.n}<span class="t">${d.t}</span></div></button></li>`).join("")}
+          </ul>
+        </div>`).join("");
+      const row = (label, x, y, cl, cr, low) => {
+        const tot = x + y, share = tot ? (low ? y / tot : x / tot) * 100 : 50;
+        const winL = low ? x < y : x > y, winR = low ? y < x : y > x;
+        return `<div class="vs-row"><b class="vs-val${winL ? " win" : ""}">${x}</b><div><div class="vs-lab">${label}</div><div class="vs-bar" style="--l:${cl};--r:${cr}" aria-hidden="true"><i style="width:${share}%"></i><i style="width:${100 - share}%"></i></div></div><b class="vs-val rt${winR ? " win" : ""}">${y}</b></div>`;
+      };
+      const side = (d, cls) => `<div class="vs-side ${cls}">${av(d, "")}<div><b>${d.n}</b><small>#${d.num} · ${d.t}</small></div></div>`;
+      function update(){
+        sides.forEach(([k, lab]) => {
+          const d = state[k] && byName[state[k]], pick = wrap.querySelector(`[data-side="${k}"]`);
+          pick.querySelector(".cmp-btn").innerHTML = `${av(d, "sm")}<div><small>${lab}</small><b>${d ? d.n : "Choose Driver"}</b></div>${chev}`;
+          pick.querySelectorAll(".cmp-opt").forEach(o => {
+            const other = state[k === "L" ? "R" : "L"];
+            o.setAttribute("aria-pressed", String(o.dataset.n === state[k]));
+            o.disabled = o.dataset.n === other;
+          });
+        });
+        acts.hidden = !(state.L || state.R);
+        if (!(state.L && state.R)) { panel.hidden = true; panel.innerHTML = ""; return; }
+        const a = byName[state.L], b = byName[state.R], same = a.c === b.c;
+        const cl = a.c, cr = same ? `color-mix(in srgb, ${b.c} 30%, var(--bg))` : b.c, m = mates(a.n, b.n);
+        panel.innerHTML = `<div class="vs-head">${side(a, "l")}<span class="vs-x">Vs.</span>${side(b, "r")}</div>
+          ${row("Championship Points", a.pt, b.pt, cl, cr)}
+          ${row("Wins", a.w, b.w, cl, cr)}
+          ${row("Podiums", a.p, b.p, cl, cr)}
+          ${row("Points Finishes", a.pf, b.pf, cl, cr)}
+          ${row("Retirements (Fewer Is Better)", a.dnf, b.dnf, cl, cr, true)}
+          ${m ? row("Teammate Qualifying Head-to-Head", m.q[0], m.q[1], cl, cr) + row("Teammate Race Head-to-Head", m.r[0], m.r[1], cl, cr) : ""}`;
+        panel.hidden = false;
+      }
+      function closeAll(){ wrap.querySelectorAll(".cmp-btn").forEach(b => { b.setAttribute("aria-expanded", "false"); document.getElementById(b.getAttribute("aria-controls")).hidden = true; }); }
+      wrap.addEventListener("click", e => {
+        const pick = e.target.closest(".cmp-pick"); if (!pick) return;
+        const k = pick.dataset.side, opt = e.target.closest(".cmp-opt"), btn = e.target.closest(".cmp-btn");
+        if (btn) {
+          const open = btn.getAttribute("aria-expanded") === "true";
+          closeAll();
+          if (!open) { btn.setAttribute("aria-expanded", "true"); document.getElementById(btn.getAttribute("aria-controls")).hidden = false; }
+        } else if (opt && !opt.disabled) {
+          state[k] = state[k] === opt.dataset.n ? null : opt.dataset.n;
+          closeAll(); update();
+          pick.querySelector(".cmp-btn").focus();
+        }
+      });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+      document.getElementById("cmpClear").addEventListener("click", () => { state.L = state.R = null; closeAll(); update(); });
+      update();
+    });
+    </script>
+  </section>
   <section id="constructors">
     <style>
       #constructors .st-sub{color:var(--muted);margin:0 0 1.5rem;max-width:62ch}
@@ -374,7 +599,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
     </style>
     <div class="wrap">
       <span class="eyebrow">Standings</span>
-      <h2>2026 constructors’ championship</h2>
+      <h2>2026 Constructors’ Championship</h2>
       <p class="st-sub">Standings after Round 20, the São Paulo Grand Prix (8 Nov 2026). Mercedes clinched their ninth constructors’ title there, their first since 2021, completing the title double with Antonelli’s drivers’ crown. Ferrari are second, 142 points behind with three rounds left.</p>
       <div class="st-podium" id="ctPodium"></div>
       <ol class="st-table" id="ctTable"></ol>
@@ -440,12 +665,12 @@ const teams = [
   {n:"McLaren",tp:"Andrea Stella",url:"https://www.mclaren.com/racing/",pu:"Mercedes",base:"Woking, UK",c:"#ff8000",d:"Papaya-orange powerhouse that reached the top of the sport in recent seasons.",dr:[["Lando Norris","1","GBR","Will Joseph"],["Oscar Piastri","81","AUS","Tom Stallard"]]},
   {n:"Mercedes",tp:"Toto Wolff",url:"https://www.mercedesamgf1.com",pu:"Mercedes",base:"Brackley, UK",c:"#00d2be",tag:"2026 Constructors’ champion",d:"Nine-time constructors’ champions, back on top in 2026 with their own power unit programme.",dr:[["George Russell","63","GBR","Marcus Dudley"],["Kimi Antonelli","12","ITA","Peter Bonnington"]]},
   {n:"Red Bull Racing",tp:"Laurent Mekies",url:"https://www.redbullracing.com",pu:"Red Bull Ford",base:"Milton Keynes, UK",c:"#3671c6",d:"Now building their own power units in partnership with Ford.",dr:[["Max Verstappen","3","NED","Gianpiero Lambiase"],["Isack Hadjar","6","FRA","Richard Wood"]]},
-  {n:"Ferrari",tp:"Fred Vasseur",url:"https://www.ferrari.com/en-EN/formula1",pu:"Ferrari",base:"Maranello, Italy",c:"#e8002d",d:"The sport’s most storied team, with the Prancing Horse chasing a first title since 2008.",dr:[["Charles Leclerc","16","MON","Bryan Bozzi"],["Lewis Hamilton","44","GBR","Carlo Santi"]]},
-  {n:"Williams",tp:"James Vowles",url:"https://www.williamsf1.com",pu:"Mercedes",base:"Grove, UK",c:"#005aff",d:"A legendary British name on the rise with a strong driver pairing.",dr:[["Alex Albon","23","THA","James Urwin"],["Carlos Sainz","55","ESP","Gaetan Jego"]]},
+  {n:"Ferrari",tp:"Frédéric Vasseur",url:"https://www.ferrari.com/en-EN/formula1",pu:"Ferrari",base:"Maranello, Italy",c:"#e8002d",d:"The sport’s most storied team, with the Prancing Horse chasing a first title since 2008.",dr:[["Charles Leclerc","16","MON","Bryan Bozzi"],["Lewis Hamilton","44","GBR","Carlo Santi"]]},
+  {n:"Williams",tp:"James Vowles",url:"https://www.williamsf1.com",pu:"Mercedes",base:"Grove, UK",c:"#005aff",d:"A legendary British name on the rise with a strong driver pairing.",dr:[["Alex Albon","23","THA","James Urwin"],["Carlos Sainz","55","ESP","Gaëtan Jégo"]]},
   {n:"Racing Bulls",tp:"Alan Permane",url:"https://www.visacashapprb.com/int-en",pu:"Red Bull Ford",base:"Faenza, Italy",c:"#6692ff",d:"Red Bull’s sister team and a proving ground for young talent.",dr:[["Liam Lawson","30","NZL","Alexandre Iliopoulos"],["Arvid Lindblad","41","GBR","Pierre Hamelin"]]},
   {n:"Aston Martin",tp:"Adrian Newey",url:"https://www.astonmartinf1.com",pu:"Honda",base:"Silverstone, UK",c:"#229971",d:"A new works partnership with Honda and big ambitions in the new rules.",dr:[["Fernando Alonso","14","ESP","Chris Cronin & Andrew Vizard"],["Lance Stroll","18","CAN","Gary Gannon"]]},
   {n:"Haas",tp:"Ayao Komatsu",url:"https://www.haasf1team.com",pu:"Ferrari",base:"Kannapolis, USA",c:"#b6babd",d:"The American team, closely tied to Ferrari, with an experienced lineup.",dr:[["Rafael Câmara","51","BRA","Laura Müller"],["Oliver Bearman","87","GBR","Ronan O’Hare"]]},
-  {n:"Audi",tp:"Mattia Binotto",url:"https://www.audi.com/en/formula-1r-17158",pu:"Audi",base:"Hinwil, Switzerland",c:"#f50537",tag:"New",d:"The German manufacturer makes its F1 debut as a works team with its own power unit.",dr:[["Nico Hülkenberg","27","GER","Steven Petrik"],["Gabriel Bortoleto","5","BRA","Jose Manuel Lopez"]]},
+  {n:"Audi",tp:"Mattia Binotto",url:"https://www.audi.com/en/formula-1r-17158",pu:"Audi",base:"Hinwil, Switzerland",c:"#f50537",tag:"New",d:"The German manufacturer makes its F1 debut as a works team with its own power unit.",dr:[["Nico Hülkenberg","27","GER","Steven Petrik"],["Gabriel Bortoleto","5","BRA","José Manuel López"]]},
   {n:"Alpine",tp:"Steve Nielsen / Flavio Briatore",url:"https://www.alpinef1.com/",pu:"Mercedes",base:"Enstone, UK",c:"#ff87bc",d:"The French outfit switches to Mercedes customer power for 2026.",dr:[["Pierre Gasly","10","FRA","Josh Peckett"],["Franco Colapinto","43","ARG","Stuart Barlow"]]},
   {n:"Cadillac",tp:"Marcin Budkowski",url:"https://www.cadillacf1team.com",pu:"Ferrari",base:"Fishers, USA",c:"#9a9aa8",tag:"New",d:"The 11th team on the grid, an American entry from General Motors.",dr:[["Sergio Pérez","11","MEX","Carlo Pasetti"],["Valtteri Bottas","77","FIN","John Howard"]]}
 ];
