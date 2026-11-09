@@ -171,6 +171,149 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
       <div class="grid" id="grid"></div>
     </div>
   </section>
+  <section id="headtohead">
+    <style>
+      .cmp-sub{color:var(--muted);margin:0 0 1.25rem;max-width:62ch}
+      .cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-items:start}
+      .cmp-pick{min-width:0}
+      .cmp-btn{width:100%;display:flex;align-items:center;gap:.6rem;font:inherit;text-align:left;padding:.6rem .8rem;min-height:58px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;box-shadow:var(--shadow)}
+      .cmp-btn>div{min-width:0;flex:1;line-height:1.2}
+      .cmp-btn small{display:block;color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+      .cmp-btn b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .cmp-btn>svg{flex:none;width:1em;height:1em;transition:transform .25s}
+      .cmp-btn[aria-expanded="true"]>svg{transform:rotate(180deg)}
+      .cmp-btn:focus-visible,.cmp-opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+      .cmp-list{list-style:none;margin:.4rem 0 0;padding:.35rem;max-height:19rem;overflow:auto;display:grid;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+      .cmp-list[hidden]{display:none}
+      .cmp-opt{width:100%;display:flex;align-items:center;gap:.55rem;font:inherit;font-size:.86rem;font-weight:600;text-align:left;padding:.4rem .5rem;border-radius:10px;border:0;background:transparent;color:var(--text);cursor:pointer;line-height:1.2}
+      .cmp-opt:hover:not(:disabled){background:var(--bg)}
+      .cmp-opt[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+      .cmp-opt:disabled{opacity:.4;cursor:default}
+      .cmp-opt .t{display:block;color:var(--muted);font-size:.7rem;font-weight:500}
+      .cmp-actions{margin-top:.9rem}
+      .cmp-actions[hidden]{display:none}
+      .vs-panel{margin-top:1.25rem;padding:1.25rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+      .vs-panel[hidden]{display:none}
+      .vs-head{display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:center;margin-bottom:.9rem}
+      .vs-side{display:flex;align-items:center;gap:.7rem;min-width:0}
+      .vs-side.r{flex-direction:row-reverse;text-align:right}
+      .vs-side div{min-width:0;line-height:1.2}
+      .vs-side b{display:block;font-size:1.05rem}
+      .vs-side small{color:var(--muted)}
+      .vs-x{font-weight:900;color:var(--muted);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+      .vs-row{display:grid;grid-template-columns:3rem 1fr 3rem;gap:.8rem;align-items:center;padding:.6rem 0;border-top:1px solid var(--line)}
+      .vs-val{font-size:1.2rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted)}
+      .vs-val.win{color:var(--text)}
+      .vs-val.rt{text-align:right}
+      .vs-lab{text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.35rem}
+      .vs-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--bg)}
+      .vs-bar i{display:block;background:var(--l)}
+      .vs-bar i+i{background:var(--r)}
+      @media (max-width:560px){.vs-side b{font-size:.92rem}.vs-side .st-av{width:36px;height:36px;font-size:.7rem}.vs-x{display:none}.vs-head{grid-template-columns:1fr 1fr}.cmp-opt{font-size:.8rem}}
+    </style>
+    <div class="wrap">
+      <span class="eyebrow">Head-to-Head</span>
+      <h2>Driver Comparison</h2>
+      <p class="cmp-sub">Open each list and choose a driver. The comparison appears once both sides are picked.</p>
+      <div class="cmp-cols" id="cmpCols"></div>
+      <div class="cmp-actions" id="cmpActions" hidden>
+        <button class="toggle" id="cmpClear" type="button"><span>Clear Selection</span></button>
+      </div>
+      <div class="vs-panel" id="vsPanel" aria-live="polite" hidden></div>
+      <p class="fine">Points, wins and podiums are after Round 20. Points finishes and retirements are after Round 19, the Mexico City Grand Prix. Qualifying and race head-to-heads, scored by Formula1.com after Round 19, appear for teammates only, and races where both drivers retired are not counted. Part-time drivers Yuki Tsunoda and Ryo Hirakawa are not listed, and neither is Rafael Câmara, who has no 2026 starts.</p>
+    </div>
+    <script>
+    window.addEventListener("load", function(){
+      const P = window.PODS || {}, stat = {};
+      Object.values(P).forEach(t => t.forEach((n, i) => { const s = stat[n] || (stat[n] = {w:0, p:0}); s.p++; if (i === 0) s.w++; }));
+      const col = {"McLaren":"#ff8000","Mercedes":"#00d2be","Red Bull Racing":"#3671c6","Ferrari":"#e8002d","Williams":"#005aff","Racing Bulls":"#6692ff","Aston Martin":"#229971","Haas":"#b6babd","Audi":"#f50537","Alpine":"#ff87bc","Cadillac":"#9a9aa8"};
+      // name, number, team, points (R20), points finishes (R19), retirements (R19)
+      const drivers = [
+        ["Kimi Antonelli",12,"Mercedes",390,17,1],["Max Verstappen",3,"Red Bull Racing",279,15,4],["George Russell",63,"Mercedes",262,15,3],
+        ["Lewis Hamilton",44,"Ferrari",261,18,1],["Charles Leclerc",16,"Ferrari",249,16,3],["Lando Norris",1,"McLaren",246,15,4],
+        ["Oscar Piastri",81,"McLaren",152,12,3],["Isack Hadjar",6,"Red Bull Racing",122,13,2],["Liam Lawson",30,"Racing Bulls",89,14,1],
+        ["Pierre Gasly",10,"Alpine",42,10,2],["Arvid Lindblad",41,"Racing Bulls",38,11,2],["Franco Colapinto",43,"Alpine",27,8,3],
+        ["Oliver Bearman",87,"Haas",23,4,6],["Gabriel Bortoleto",5,"Audi",14,4,2],["Nico Hülkenberg",27,"Audi",14,4,4],
+        ["Esteban Ocon",31,"Haas",7,3,1],["Fernando Alonso",14,"Aston Martin",7,3,7],["Carlos Sainz",55,"Williams",7,4,3],
+        ["Alex Albon",23,"Williams",5,2,8],["Lance Stroll",18,"Aston Martin",0,0,13],["Valtteri Bottas",77,"Cadillac",0,0,10],["Sergio Pérez",11,"Cadillac",0,0,5]
+      ].map(([n,num,t,pt,pf,dnf]) => ({n, num, t, c:col[t], pt, pf, dnf, w:(stat[n]||{w:0}).w, p:(stat[n]||{p:0}).p}));
+      const byName = Object.fromEntries(drivers.map(d => [d.n, d]));
+      // teammate head-to-heads after Round 19: [driver A, driver B, qualifying A-B, race A-B]
+      const h2h = [
+        ["Kimi Antonelli","George Russell",[11,8],[14,5]], ["Lewis Hamilton","Charles Leclerc",[9,10],[10,9]],
+        ["Max Verstappen","Isack Hadjar",[12,4],[13,3]], ["Lando Norris","Oscar Piastri",[12,7],[11,7]],
+        ["Liam Lawson","Arvid Lindblad",[9,7],[12,4]], ["Pierre Gasly","Franco Colapinto",[16,3],[11,7]],
+        ["Oliver Bearman","Esteban Ocon",[13,5],[10,7]], ["Nico Hülkenberg","Gabriel Bortoleto",[10,9],[10,9]],
+        ["Carlos Sainz","Alex Albon",[14,5],[11,8]], ["Fernando Alonso","Lance Stroll",[17,2],[10,3]],
+        ["Sergio Pérez","Valtteri Bottas",[11,8],[13,4]]
+      ];
+      const mates = (x, y) => { for (const [a,b,q,r] of h2h) { if (a===x && b===y) return {q, r}; if (a===y && b===x) return {q:[q[1],q[0]], r:[r[1],r[0]]}; } return null; };
+      const pics = (typeof photos !== "undefined") ? photos : {};
+      const ini = n => n.split(" ")[0][0] + n.split(" ").pop()[0];
+      const av = (d, cls) => d && pics[d.n]
+        ? `<img class="st-av ${cls}" src="${pics[d.n]}" alt="${d.n}" width="${cls ? 32 : 44}" height="${cls ? 32 : 44}">`
+        : `<span class="st-av ${cls}" style="--c:${d ? d.c : "#888"}" aria-hidden="true">${d ? ini(d.n) : "?"}</span>`;
+      const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+      const wrap = document.getElementById("cmpCols"), panel = document.getElementById("vsPanel");
+      const acts = document.getElementById("cmpActions");
+      const sides = [["L","Driver One"],["R","Driver Two"]];
+      const state = {L:null, R:null};
+      wrap.innerHTML = sides.map(([k, lab]) => `
+        <div class="cmp-pick" data-side="${k}">
+          <button type="button" class="cmp-btn" aria-expanded="false" aria-controls="cmpList${k}"></button>
+          <ul class="cmp-list" id="cmpList${k}" hidden>${drivers.map(d => `
+            <li><button type="button" class="cmp-opt" data-n="${d.n}" aria-pressed="false">${av(d,"sm")}<div>${d.n}<span class="t">${d.t}</span></div></button></li>`).join("")}
+          </ul>
+        </div>`).join("");
+      const row = (label, x, y, cl, cr, low) => {
+        const tot = x + y, share = tot ? (low ? y / tot : x / tot) * 100 : 50;
+        const winL = low ? x < y : x > y, winR = low ? y < x : y > x;
+        return `<div class="vs-row"><b class="vs-val${winL ? " win" : ""}">${x}</b><div><div class="vs-lab">${label}</div><div class="vs-bar" style="--l:${cl};--r:${cr}" aria-hidden="true"><i style="width:${share}%"></i><i style="width:${100 - share}%"></i></div></div><b class="vs-val rt${winR ? " win" : ""}">${y}</b></div>`;
+      };
+      const side = (d, cls) => `<div class="vs-side ${cls}">${av(d, "")}<div><b>${d.n}</b><small>#${d.num} · ${d.t}</small></div></div>`;
+      function update(){
+        sides.forEach(([k, lab]) => {
+          const d = state[k] && byName[state[k]], pick = wrap.querySelector(`[data-side="${k}"]`);
+          pick.querySelector(".cmp-btn").innerHTML = `${av(d, "sm")}<div><small>${lab}</small><b>${d ? d.n : "Choose Driver"}</b></div>${chev}`;
+          pick.querySelectorAll(".cmp-opt").forEach(o => {
+            const other = state[k === "L" ? "R" : "L"];
+            o.setAttribute("aria-pressed", String(o.dataset.n === state[k]));
+            o.disabled = o.dataset.n === other;
+          });
+        });
+        acts.hidden = !(state.L || state.R);
+        if (!(state.L && state.R)) { panel.hidden = true; panel.innerHTML = ""; return; }
+        const a = byName[state.L], b = byName[state.R], same = a.c === b.c;
+        const cl = a.c, cr = same ? `color-mix(in srgb, ${b.c} 30%, var(--bg))` : b.c, m = mates(a.n, b.n);
+        panel.innerHTML = `<div class="vs-head">${side(a, "l")}<span class="vs-x">Vs.</span>${side(b, "r")}</div>
+          ${row("Championship Points", a.pt, b.pt, cl, cr)}
+          ${row("Wins", a.w, b.w, cl, cr)}
+          ${row("Podiums", a.p, b.p, cl, cr)}
+          ${row("Points Finishes", a.pf, b.pf, cl, cr)}
+          ${row("Retirements (Fewer Is Better)", a.dnf, b.dnf, cl, cr, true)}
+          ${m ? row("Teammate Qualifying Head-to-Head", m.q[0], m.q[1], cl, cr) + row("Teammate Race Head-to-Head", m.r[0], m.r[1], cl, cr) : ""}`;
+        panel.hidden = false;
+      }
+      function closeAll(){ wrap.querySelectorAll(".cmp-btn").forEach(b => { b.setAttribute("aria-expanded", "false"); document.getElementById(b.getAttribute("aria-controls")).hidden = true; }); }
+      wrap.addEventListener("click", e => {
+        const pick = e.target.closest(".cmp-pick"); if (!pick) return;
+        const k = pick.dataset.side, opt = e.target.closest(".cmp-opt"), btn = e.target.closest(".cmp-btn");
+        if (btn) {
+          const open = btn.getAttribute("aria-expanded") === "true";
+          closeAll();
+          if (!open) { btn.setAttribute("aria-expanded", "true"); document.getElementById(btn.getAttribute("aria-controls")).hidden = false; }
+        } else if (opt && !opt.disabled) {
+          state[k] = state[k] === opt.dataset.n ? null : opt.dataset.n;
+          closeAll(); update();
+          pick.querySelector(".cmp-btn").focus();
+        }
+      });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+      document.getElementById("cmpClear").addEventListener("click", () => { state.L = state.R = null; closeAll(); update(); });
+      update();
+    });
+    </script>
+  </section>
   <section id="schedule">
     <div class="wrap">
       <div class="sched-head">
@@ -445,149 +588,6 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
         list.hidden = open;
         lab.textContent = open ? "Show positions 4–24" : "Hide positions 4–24";
       });
-    });
-    </script>
-  </section>
-  <section id="headtohead">
-    <style>
-      .cmp-sub{color:var(--muted);margin:0 0 1.25rem;max-width:62ch}
-      .cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-items:start}
-      .cmp-pick{min-width:0}
-      .cmp-btn{width:100%;display:flex;align-items:center;gap:.6rem;font:inherit;text-align:left;padding:.6rem .8rem;min-height:58px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;box-shadow:var(--shadow)}
-      .cmp-btn>div{min-width:0;flex:1;line-height:1.2}
-      .cmp-btn small{display:block;color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
-      .cmp-btn b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      .cmp-btn>svg{flex:none;width:1em;height:1em;transition:transform .25s}
-      .cmp-btn[aria-expanded="true"]>svg{transform:rotate(180deg)}
-      .cmp-btn:focus-visible,.cmp-opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-      .cmp-list{list-style:none;margin:.4rem 0 0;padding:.35rem;max-height:19rem;overflow:auto;display:grid;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-      .cmp-list[hidden]{display:none}
-      .cmp-opt{width:100%;display:flex;align-items:center;gap:.55rem;font:inherit;font-size:.86rem;font-weight:600;text-align:left;padding:.4rem .5rem;border-radius:10px;border:0;background:transparent;color:var(--text);cursor:pointer;line-height:1.2}
-      .cmp-opt:hover:not(:disabled){background:var(--bg)}
-      .cmp-opt[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 12%,transparent)}
-      .cmp-opt:disabled{opacity:.4;cursor:default}
-      .cmp-opt .t{display:block;color:var(--muted);font-size:.7rem;font-weight:500}
-      .cmp-actions{margin-top:.9rem}
-      .cmp-actions[hidden]{display:none}
-      .vs-panel{margin-top:1.25rem;padding:1.25rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-      .vs-panel[hidden]{display:none}
-      .vs-head{display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:center;margin-bottom:.9rem}
-      .vs-side{display:flex;align-items:center;gap:.7rem;min-width:0}
-      .vs-side.r{flex-direction:row-reverse;text-align:right}
-      .vs-side div{min-width:0;line-height:1.2}
-      .vs-side b{display:block;font-size:1.05rem}
-      .vs-side small{color:var(--muted)}
-      .vs-x{font-weight:900;color:var(--muted);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
-      .vs-row{display:grid;grid-template-columns:3rem 1fr 3rem;gap:.8rem;align-items:center;padding:.6rem 0;border-top:1px solid var(--line)}
-      .vs-val{font-size:1.2rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted)}
-      .vs-val.win{color:var(--text)}
-      .vs-val.rt{text-align:right}
-      .vs-lab{text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.35rem}
-      .vs-bar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--bg)}
-      .vs-bar i{display:block;background:var(--l)}
-      .vs-bar i+i{background:var(--r)}
-      @media (max-width:560px){.vs-side b{font-size:.92rem}.vs-side .st-av{width:36px;height:36px;font-size:.7rem}.vs-x{display:none}.vs-head{grid-template-columns:1fr 1fr}.cmp-opt{font-size:.8rem}}
-    </style>
-    <div class="wrap">
-      <span class="eyebrow">Head-to-Head</span>
-      <h2>Driver Comparison</h2>
-      <p class="cmp-sub">Open each list and choose a driver. The comparison appears once both sides are picked.</p>
-      <div class="cmp-cols" id="cmpCols"></div>
-      <div class="cmp-actions" id="cmpActions" hidden>
-        <button class="toggle" id="cmpClear" type="button"><span>Clear Selection</span></button>
-      </div>
-      <div class="vs-panel" id="vsPanel" aria-live="polite" hidden></div>
-      <p class="fine">Points, wins and podiums are after Round 20. Points finishes and retirements are after Round 19, the Mexico City Grand Prix. Qualifying and race head-to-heads, scored by Formula1.com after Round 19, appear for teammates only, and races where both drivers retired are not counted. Part-time drivers Yuki Tsunoda and Ryo Hirakawa are not listed, and neither is Rafael Câmara, who has no 2026 starts.</p>
-    </div>
-    <script>
-    document.addEventListener("DOMContentLoaded", function(){
-      const P = window.PODS || {}, stat = {};
-      Object.values(P).forEach(t => t.forEach((n, i) => { const s = stat[n] || (stat[n] = {w:0, p:0}); s.p++; if (i === 0) s.w++; }));
-      const col = {"McLaren":"#ff8000","Mercedes":"#00d2be","Red Bull Racing":"#3671c6","Ferrari":"#e8002d","Williams":"#005aff","Racing Bulls":"#6692ff","Aston Martin":"#229971","Haas":"#b6babd","Audi":"#f50537","Alpine":"#ff87bc","Cadillac":"#9a9aa8"};
-      // name, number, team, points (R20), points finishes (R19), retirements (R19)
-      const drivers = [
-        ["Kimi Antonelli",12,"Mercedes",390,17,1],["Max Verstappen",3,"Red Bull Racing",279,15,4],["George Russell",63,"Mercedes",262,15,3],
-        ["Lewis Hamilton",44,"Ferrari",261,18,1],["Charles Leclerc",16,"Ferrari",249,16,3],["Lando Norris",1,"McLaren",246,15,4],
-        ["Oscar Piastri",81,"McLaren",152,12,3],["Isack Hadjar",6,"Red Bull Racing",122,13,2],["Liam Lawson",30,"Racing Bulls",89,14,1],
-        ["Pierre Gasly",10,"Alpine",42,10,2],["Arvid Lindblad",41,"Racing Bulls",38,11,2],["Franco Colapinto",43,"Alpine",27,8,3],
-        ["Oliver Bearman",87,"Haas",23,4,6],["Gabriel Bortoleto",5,"Audi",14,4,2],["Nico Hülkenberg",27,"Audi",14,4,4],
-        ["Esteban Ocon",31,"Haas",7,3,1],["Fernando Alonso",14,"Aston Martin",7,3,7],["Carlos Sainz",55,"Williams",7,4,3],
-        ["Alex Albon",23,"Williams",5,2,8],["Lance Stroll",18,"Aston Martin",0,0,13],["Valtteri Bottas",77,"Cadillac",0,0,10],["Sergio Pérez",11,"Cadillac",0,0,5]
-      ].map(([n,num,t,pt,pf,dnf]) => ({n, num, t, c:col[t], pt, pf, dnf, w:(stat[n]||{w:0}).w, p:(stat[n]||{p:0}).p}));
-      const byName = Object.fromEntries(drivers.map(d => [d.n, d]));
-      // teammate head-to-heads after Round 19: [driver A, driver B, qualifying A-B, race A-B]
-      const h2h = [
-        ["Kimi Antonelli","George Russell",[11,8],[14,5]], ["Lewis Hamilton","Charles Leclerc",[9,10],[10,9]],
-        ["Max Verstappen","Isack Hadjar",[12,4],[13,3]], ["Lando Norris","Oscar Piastri",[12,7],[11,7]],
-        ["Liam Lawson","Arvid Lindblad",[9,7],[12,4]], ["Pierre Gasly","Franco Colapinto",[16,3],[11,7]],
-        ["Oliver Bearman","Esteban Ocon",[13,5],[10,7]], ["Nico Hülkenberg","Gabriel Bortoleto",[10,9],[10,9]],
-        ["Carlos Sainz","Alex Albon",[14,5],[11,8]], ["Fernando Alonso","Lance Stroll",[17,2],[10,3]],
-        ["Sergio Pérez","Valtteri Bottas",[11,8],[13,4]]
-      ];
-      const mates = (x, y) => { for (const [a,b,q,r] of h2h) { if (a===x && b===y) return {q, r}; if (a===y && b===x) return {q:[q[1],q[0]], r:[r[1],r[0]]}; } return null; };
-      const pics = (typeof photos !== "undefined") ? photos : {};
-      const ini = n => n.split(" ")[0][0] + n.split(" ").pop()[0];
-      const av = (d, cls) => d && pics[d.n]
-        ? `<img class="st-av ${cls}" src="${pics[d.n]}" alt="${d.n}" width="${cls ? 32 : 44}" height="${cls ? 32 : 44}">`
-        : `<span class="st-av ${cls}" style="--c:${d ? d.c : "#888"}" aria-hidden="true">${d ? ini(d.n) : "?"}</span>`;
-      const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
-      const wrap = document.getElementById("cmpCols"), panel = document.getElementById("vsPanel");
-      const acts = document.getElementById("cmpActions");
-      const sides = [["L","Driver One"],["R","Driver Two"]];
-      const state = {L:null, R:null};
-      wrap.innerHTML = sides.map(([k, lab]) => `
-        <div class="cmp-pick" data-side="${k}">
-          <button type="button" class="cmp-btn" aria-expanded="false" aria-controls="cmpList${k}"></button>
-          <ul class="cmp-list" id="cmpList${k}" hidden>${drivers.map(d => `
-            <li><button type="button" class="cmp-opt" data-n="${d.n}" aria-pressed="false">${av(d,"sm")}<div>${d.n}<span class="t">${d.t}</span></div></button></li>`).join("")}
-          </ul>
-        </div>`).join("");
-      const row = (label, x, y, cl, cr, low) => {
-        const tot = x + y, share = tot ? (low ? y / tot : x / tot) * 100 : 50;
-        const winL = low ? x < y : x > y, winR = low ? y < x : y > x;
-        return `<div class="vs-row"><b class="vs-val${winL ? " win" : ""}">${x}</b><div><div class="vs-lab">${label}</div><div class="vs-bar" style="--l:${cl};--r:${cr}" aria-hidden="true"><i style="width:${share}%"></i><i style="width:${100 - share}%"></i></div></div><b class="vs-val rt${winR ? " win" : ""}">${y}</b></div>`;
-      };
-      const side = (d, cls) => `<div class="vs-side ${cls}">${av(d, "")}<div><b>${d.n}</b><small>#${d.num} · ${d.t}</small></div></div>`;
-      function update(){
-        sides.forEach(([k, lab]) => {
-          const d = state[k] && byName[state[k]], pick = wrap.querySelector(`[data-side="${k}"]`);
-          pick.querySelector(".cmp-btn").innerHTML = `${av(d, "sm")}<div><small>${lab}</small><b>${d ? d.n : "Choose Driver"}</b></div>${chev}`;
-          pick.querySelectorAll(".cmp-opt").forEach(o => {
-            const other = state[k === "L" ? "R" : "L"];
-            o.setAttribute("aria-pressed", String(o.dataset.n === state[k]));
-            o.disabled = o.dataset.n === other;
-          });
-        });
-        acts.hidden = !(state.L || state.R);
-        if (!(state.L && state.R)) { panel.hidden = true; panel.innerHTML = ""; return; }
-        const a = byName[state.L], b = byName[state.R], same = a.c === b.c;
-        const cl = a.c, cr = same ? `color-mix(in srgb, ${b.c} 30%, var(--bg))` : b.c, m = mates(a.n, b.n);
-        panel.innerHTML = `<div class="vs-head">${side(a, "l")}<span class="vs-x">Vs.</span>${side(b, "r")}</div>
-          ${row("Championship Points", a.pt, b.pt, cl, cr)}
-          ${row("Wins", a.w, b.w, cl, cr)}
-          ${row("Podiums", a.p, b.p, cl, cr)}
-          ${row("Points Finishes", a.pf, b.pf, cl, cr)}
-          ${row("Retirements (Fewer Is Better)", a.dnf, b.dnf, cl, cr, true)}
-          ${m ? row("Teammate Qualifying Head-to-Head", m.q[0], m.q[1], cl, cr) + row("Teammate Race Head-to-Head", m.r[0], m.r[1], cl, cr) : ""}`;
-        panel.hidden = false;
-      }
-      function closeAll(){ wrap.querySelectorAll(".cmp-btn").forEach(b => { b.setAttribute("aria-expanded", "false"); document.getElementById(b.getAttribute("aria-controls")).hidden = true; }); }
-      wrap.addEventListener("click", e => {
-        const pick = e.target.closest(".cmp-pick"); if (!pick) return;
-        const k = pick.dataset.side, opt = e.target.closest(".cmp-opt"), btn = e.target.closest(".cmp-btn");
-        if (btn) {
-          const open = btn.getAttribute("aria-expanded") === "true";
-          closeAll();
-          if (!open) { btn.setAttribute("aria-expanded", "true"); document.getElementById(btn.getAttribute("aria-controls")).hidden = false; }
-        } else if (opt && !opt.disabled) {
-          state[k] = state[k] === opt.dataset.n ? null : opt.dataset.n;
-          closeAll(); update();
-          pick.querySelector(".cmp-btn").focus();
-        }
-      });
-      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
-      document.getElementById("cmpClear").addEventListener("click", () => { state.L = state.R = null; closeAll(); update(); });
-      update();
     });
     </script>
   </section>
