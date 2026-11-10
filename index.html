@@ -489,8 +489,13 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
       .pd-slot b{display:block;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .pd-slot small{color:var(--muted);font-size:.72rem}
       .pd-pos{font-size:.7rem;font-weight:800;color:var(--muted);min-width:1.6rem}
+       .pd-slot>div{flex:1 1 auto}
+       .pd-slot .pd-pts{flex:none;margin-left:auto;padding-left:.4rem;text-align:right;line-height:1.15}
+       .pd-slot .pd-pts b{display:block;overflow:visible;font-size:.95rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+       .pd-slot .pd-pts small{display:block;font-size:.64rem;white-space:nowrap}
       .pd-slot.p1 .pd-pos{color:#d99a00}
-      @media (max-width:760px){.pd-row{grid-template-columns:1fr}.pd-slots{grid-template-columns:1fr}}
+      @media (max-width:1100px){.pd-row{grid-template-columns:1fr}}
+       @media (max-width:900px){.pd-slots{grid-template-columns:1fr}}
     </style>
     <div class="wrap">
       <span class="eyebrow">Podiums</span>
@@ -501,7 +506,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
       <div class="st-actions">
         <button class="toggle" id="pdToggle" type="button" aria-expanded="false" aria-controls="pdList"><span id="pdLabel">Show all races</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       </div>
-      <p class="fine">Results after any post-race penalties. The Bahrain Grand Prix was held in Sepang, Malaysia.</p>
+      <p class="fine">Results after any post-race penalties. Points are Grand Prix points, plus sprint points on sprint weekends. The Bahrain Grand Prix was held in Sepang, Malaysia.</p>
     </div>
     <script>
     document.addEventListener("DOMContentLoaded", function(){
@@ -518,6 +523,21 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
         19:["Max Verstappen","Lewis Hamilton","Kimi Antonelli"], 20:["Lando Norris","Max Verstappen","Isack Hadjar"]
       };
       window.PODS = pod;
+      const gp = [25, 18, 15];
+      // Sprint points for the podium finishers on sprint weekends (final classification)
+      const spr = {
+        2:{"Kimi Antonelli":4,"George Russell":8,"Lewis Hamilton":6},
+        4:{"Kimi Antonelli":3,"Lando Norris":8,"Oscar Piastri":7},
+        5:{"Kimi Antonelli":6,"Lewis Hamilton":3,"Max Verstappen":2},
+        9:{"Charles Leclerc":4,"George Russell":5,"Lewis Hamilton":7},
+        12:{"Lando Norris":6,"Kimi Antonelli":5,"George Russell":8},
+        17:{"Max Verstappen":8,"Charles Leclerc":6,"Kimi Antonelli":5}
+      };
+      const pts = (rc, n, i) => {
+        if (!rc.sp) return `<span class="pd-pts"><b>${gp[i]}</b><small>pts</small></span>`;
+        const sp = (spr[rc.r] && spr[rc.r][n]) || 0;
+        return `<span class="pd-pts"><b>${gp[i] + sp}</b><small>${gp[i]} + ${sp} sprint</small></span>`;
+      };
       const col = {}, tm = {};
       teams.forEach(t => t.dr.forEach(d => { col[d[0]] = t.c; tm[d[0]] = t.n; }));
       const ini = n => n.split(" ")[0][0] + n.split(" ").pop()[0];
@@ -537,7 +557,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
         <li class="pd-row">
           <div class="pd-race"><span class="pd-rd">R${rc.r}</span><div><b>${rc.n}${tags(rc)}</b><small>${range(rc)}</small></div></div>
           <div class="pd-slots">${pod[rc.r].map((n, i) => `
-            <div class="pd-slot p${i + 1}" style="--c:${col[n] || "#888"}"><span class="pd-pos">${ord[i]}</span>${av(n)}<div><b>${last(n)}</b><small>${tm[n] || ""}</small></div></div>`).join("")}
+            <div class="pd-slot p${i + 1}" style="--c:${col[n] || "#888"}"><span class="pd-pos">${ord[i]}</span>${av(n)}<div><b>${last(n)}</b><small>${tm[n] || ""}</small></div>${pts(rc, n, i)}</div>`).join("")}
           </div>
         </li>`).join("");
       const btn = document.getElementById("pdToggle"), lab = document.getElementById("pdLabel");
