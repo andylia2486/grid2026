@@ -363,6 +363,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
         <div><span class="eyebrow">Schedule</span><h2>2026 Race Calendar</h2></div>
         <button class="toggle" id="schedToggle" type="button" aria-expanded="false" aria-controls="schedList"><span id="schedLabel">Show full schedule</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       </div>
+      <p class="tz-note" id="tzNote"></p>
       <div class="cal" id="cal" aria-label="Race calendar"></div>
       <style>
         .cal{margin-top:1.5rem;padding:1.25rem;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
@@ -399,6 +400,15 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
         .cal-legend .lg-sp{position:relative;background:var(--accent)}
         .cal-legend .lg-sp::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:#fff}
         .cal .now{margin-top:1rem;background:var(--bg);box-shadow:none}
+        .tz-note{margin:.8rem 0 0;color:var(--muted);font-size:.88rem}
+        .ses{list-style:none;margin:.9rem 0 0;padding:0}
+        .ses li{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.55rem 0;border-top:1px solid var(--line);font-size:.92rem}
+        .ses li b{font-weight:700}
+        .ses li.is-race b{color:var(--accent)}
+        .ses li.past{opacity:.5}
+        .ses .t{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+        .ses small{display:block;color:var(--muted);font-size:.72rem;font-weight:500}
+        .rt{display:block;color:var(--muted);font-weight:500;font-size:.72rem}
         @media (max-width:560px){.cal{padding:1rem .75rem}.cal-cell{font-size:.85rem}}
       </style>
       <script>
@@ -448,7 +458,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
             <div class="cal-legend">
               <span><i class="lg-wk"></i>Race weekend</span><span><i class="lg-race"></i>Race day</span><span><i class="lg-today"></i>Today</span><span><i class="lg-sp"></i>Sprint weekend</span>
             </div>
-            <div class="now" aria-live="polite"><span class="badge">${status(sel)}</span><h3>${rc.n}${tags(rc)}</h3><p class="sub">Round ${rc.r} of ${races.length} · ${rc.v} · ${range(rc)}</p></div>`;
+            <div class="now" aria-live="polite"><span class="badge">${status(sel)}</span><h3>${rc.n}${tags(rc)}</h3><p class="sub">Round ${rc.r} of ${races.length} · ${rc.v} · ${range(rc)}</p>${sessionsHtml(rc)}</div>`;
           if (focus){ const f = el.querySelector(focus); if (f && f.focus) f.focus(); }
         }
         el.addEventListener("click", e => {
@@ -466,7 +476,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-s
       });
       </script>
       <ol class="race-list" id="schedList" hidden></ol>
-      <p class="fine">23 rounds. The April Bahrain and Saudi Arabian races were cancelled, and Bahrain’s race was moved to Sepang, Malaysia. Dates are subject to change.</p>
+      <p class="fine">23 rounds. The April Bahrain and Saudi Arabian races were cancelled, and Bahrain’s race was moved to Sepang, Malaysia. Dates and times are subject to change. Session times are circuit-local times converted to your time zone.</p>
     </div>
   </section>
   <section id="podiums">
@@ -790,6 +800,38 @@ const races = [
   [22,"Qatar Grand Prix","Lusail International Circuit","2026-11-27","2026-11-29"],
   [23,"Abu Dhabi Grand Prix","Yas Marina Circuit","2026-12-04","2026-12-06"]
 ].map(([r,n,v,s,e,sp,note]) => ({r,n,v,s:Date.parse(s+"T00:00:00Z"),e:Date.parse(e+"T00:00:00Z"),sp,note}));
+// Session times are circuit-local; convert them to the viewer's time zone and re-date each weekend to match.
+const SESSION_NAMES = {P1:"Practice 1",P2:"Practice 2",P3:"Practice 3",SQ:"Sprint Qualifying",SP:"Sprint",Q:"Qualifying",R:"Race"};
+const TZ = {1:"Australia/Melbourne",2:"Asia/Shanghai",3:"Asia/Tokyo",4:"America/New_York",5:"America/Toronto",6:"Europe/Monaco",7:"Europe/Madrid",8:"Europe/Vienna",9:"Europe/London",10:"Europe/Brussels",11:"Europe/Budapest",12:"Europe/Amsterdam",13:"Europe/Rome",14:"Europe/Madrid",15:"Asia/Baku",16:"Asia/Kuala_Lumpur",17:"Asia/Singapore",18:"America/Chicago",19:"America/Mexico_City",20:"America/Sao_Paulo",21:"America/Los_Angeles",22:"Asia/Qatar",23:"Asia/Dubai"};
+const SES = {1:"P1 03-06 12:30;P2 03-06 16:00;P3 03-07 12:30;Q 03-07 16:00;R 03-08 15:00",2:"P1 03-13 11:30;SQ 03-13 15:30;SP 03-14 11:00;Q 03-14 15:00;R 03-15 15:00",3:"P1 03-27 11:30;P2 03-27 15:00;P3 03-28 11:30;Q 03-28 15:00;R 03-29 14:00",4:"P1 05-01 12:30;SQ 05-01 16:30;SP 05-02 12:00;Q 05-02 16:00;R 05-03 16:00",5:"P1 05-22 12:30;SQ 05-22 16:30;SP 05-23 12:00;Q 05-23 16:00;R 05-24 16:00",6:"P1 06-05 13:30;P2 06-05 17:00;P3 06-06 12:30;Q 06-06 16:00;R 06-07 15:00",7:"P1 06-12 13:30;P2 06-12 17:00;P3 06-13 12:30;Q 06-13 16:00;R 06-14 15:00",8:"P1 06-26 13:30;P2 06-26 17:00;P3 06-27 12:30;Q 06-27 16:00;R 06-28 15:00",9:"P1 07-03 12:30;SQ 07-03 16:30;SP 07-04 12:00;Q 07-04 16:00;R 07-05 15:00",10:"P1 07-17 13:30;P2 07-17 17:00;P3 07-18 12:30;Q 07-18 16:00;R 07-19 15:00",11:"P1 07-24 13:30;P2 07-24 17:00;P3 07-25 12:30;Q 07-25 16:00;R 07-26 15:00",12:"P1 08-21 12:30;SQ 08-21 16:30;SP 08-22 12:00;Q 08-22 16:00;R 08-23 15:00",13:"P1 09-04 12:30;P2 09-04 16:00;P3 09-05 12:30;Q 09-05 16:00;R 09-06 15:00",14:"P1 09-11 13:30;P2 09-11 17:00;P3 09-12 12:30;Q 09-12 16:00;R 09-13 15:00",15:"P1 09-24 12:30;P2 09-24 16:00;P3 09-25 12:30;Q 09-25 16:00;R 09-26 15:00",16:"P1 10-02 12:30;P2 10-02 16:00;P3 10-03 12:30;Q 10-03 16:00;R 10-04 15:00",17:"P1 10-09 17:30;SQ 10-09 20:30;SP 10-10 17:00;Q 10-10 21:00;R 10-11 20:00",18:"P1 10-23 12:30;P2 10-23 16:00;P3 10-24 12:30;Q 10-24 16:00;R 10-25 15:00",19:"P1 10-30 12:30;P2 10-30 16:00;P3 10-31 11:30;Q 10-31 15:00;R 11-01 14:00",20:"P1 11-06 12:30;P2 11-06 16:00;P3 11-07 11:30;Q 11-07 15:00;R 11-08 14:00",21:"P1 11-19 16:30;P2 11-19 20:00;P3 11-20 16:30;Q 11-20 20:00;R 11-21 20:00",22:"P1 11-27 16:30;P2 11-27 20:00;P3 11-28 17:30;Q 11-28 21:00;R 11-29 19:00",23:"P1 12-04 13:30;P2 12-04 17:00;P3 12-05 14:30;Q 12-05 18:00;R 12-06 17:00"};
+const viewerTz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch (e) { return "UTC"; } })();
+const tzOff = (tz, ms) => {
+  const p = {}; new Intl.DateTimeFormat("en-US", {timeZone:tz, hourCycle:"h23", year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric"})
+    .formatToParts(new Date(ms)).forEach(x => p[x.type] = x.value);
+  return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second) - Math.floor(ms / 1000) * 1000;
+};
+const toUtc = (tz, mo, d, h, mi) => {
+  const g = Date.UTC(2026, mo - 1, d, h, mi); let u = g - tzOff(tz, g);
+  const o = tzOff(tz, u); if (o !== tzOff(tz, g)) u = g - o; return u;
+};
+races.forEach(rc => {
+  try {
+    const tz = TZ[rc.r], raw = SES[rc.r]; if (!tz || !raw) return;
+    rc.tz = tz;
+    rc.ses = raw.split(";").map(x => {
+      const [c, md, t] = x.split(" "), [mo, d] = md.split("-").map(Number), [h, mi] = t.split(":").map(Number);
+      return {c, name:SESSION_NAMES[c], at:toUtc(tz, mo, d, h, mi), venue:t};
+    });
+    const day = ms => { const dt = new Date(ms); return Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()); };
+    rc.s = day(rc.ses[0].at); rc.e = day(rc.ses[rc.ses.length - 1].at);
+  } catch (e) { rc.ses = null; }
+});
+const sesFmt = new Intl.DateTimeFormat("en-GB", {weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit", hour12:false});
+const hmFmt = new Intl.DateTimeFormat("en-GB", {weekday:"short", hour:"2-digit", minute:"2-digit", hour12:false});
+const tzLabel = (() => { try { const o = new Intl.DateTimeFormat("en", {timeZoneName:"shortOffset"}).formatToParts(new Date()).find(x => x.type === "timeZoneName"); return `${viewerTz.replace(/_/g, " ")}${o ? " (" + o.value + ")" : ""}`; } catch (e) { return viewerTz; } })();
+const raceTime = rc => rc.ses ? `Race ${hmFmt.format(rc.ses[rc.ses.length - 1].at)}` : "";
+const sessionsHtml = rc => !rc.ses ? "" : `<ul class="ses" aria-label="Session times in your time zone">${rc.ses.map(s => `
+  <li class="${s.c === "R" ? "is-race" : ""}${s.at < Date.now() ? " past" : ""}"><b>${s.name}</b><span class="t">${sesFmt.format(s.at)}<small>Circuit time ${s.venue}</small></span></li>`).join("")}</ul>`;
 const now = new Date(), today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
 const fmt = new Intl.DateTimeFormat("en", {month:"short", day:"numeric", timeZone:"UTC"});
 const mon = new Intl.DateTimeFormat("en", {month:"short", timeZone:"UTC"});
@@ -800,11 +842,12 @@ const range = rc => {
 const cur = races.findIndex(rc => rc.e >= today);
 const tags = rc => (rc.sp ? '<span class="pill">Sprint</span>' : "") + (rc.note ? `<span class="pill">${rc.note}</span>` : "");
 const listEl = document.getElementById("schedList");
+{ const n = document.getElementById("tzNote"); if (n) n.textContent = `Times shown in your time zone: ${tzLabel}`; }
 listEl.innerHTML = races.map((rc, i) => `
   <li class="race${i === cur ? " current" : rc.e < today ? " past" : ""}"${i === cur ? ' aria-current="true"' : ""}>
     <span class="rd">R${rc.r}</span>
     <div><b>${rc.n}${tags(rc)}</b><small>${rc.v}</small></div>
-    <span class="when">${range(rc)}</span>
+    <span class="when">${range(rc)}<small class="rt">${raceTime(rc)}</small></span>
   </li>`).join("");
 const tgl = document.getElementById("schedToggle"), lbl = document.getElementById("schedLabel");
 tgl.addEventListener("click", () => {
